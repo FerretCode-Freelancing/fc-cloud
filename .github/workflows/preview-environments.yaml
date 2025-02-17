@@ -67,8 +67,6 @@ jobs:
               secretNamespace: preview-pr-${{ github.event.number }} 
           EOF
 
-          kustomize edit add patch --path infisicalsecret-patch.yaml
-
           kubectl --kubeconfig=../kubeconfig apply -k .
 
   cleanup-preview-environment:
