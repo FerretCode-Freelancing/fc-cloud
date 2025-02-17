@@ -55,6 +55,20 @@ jobs:
         run: |
           cd services
           kustomize edit set namespace preview-pr-${{ github.event.number }}
+
+          cat <<EOF>> infisicalsecret-patch.yaml
+          apiVersion: v1alpha1
+          kind: InfisicalSecret
+          metadata:
+            name: infisicalsecret
+            namespace: preview-pr-${{ github.event.number }}
+          spec:
+            managedSecretReference:
+              secretNamespace: preview-pr-${{ github.event.number }} 
+          EOF
+
+          kustomize edit add patch --path infisicalsecret-patch.yaml
+
           kubectl --kubeconfig=../kubeconfig apply -k .
 
   cleanup-preview-environment:
